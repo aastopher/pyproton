@@ -1,0 +1,21 @@
+# dev
+.dev.py
+.dev
+
+# caches
+**/logs
+**/__pycache__
+
+# env files
+.env
+
+# caches & builds
+**/__pycache__
+**/.pytest_cache
+**/*.egg-info
+**/dist
+**/docs/build
+**/_build
+
+# system files
+.DS_Store
