@@ -27,7 +27,12 @@ Debian based distros
 ### **Import and use pyproton VPN:**
 
 * `verbose=True` turns on the stdin output for each step.
-* `vpn.shuffle()` will disconnect from the current VPN and connected to another
+* `vpn.login()` log the user into proton VPN
+* `vpn.logout()` log the user out of proton VPN
+* `vpn.shuffle()` disconnects from the current VPN and connected to another
+* `vpn.connect()` connect to proton VPN endpoint
+* `vpn.disconnect()` disconnect from proton VPN endpoint
+* Using the context manager will automatically (login / connect) and (disconnect / logout) when entering and exiting the VPN context.
 
 **NOTE:** It is generally recommended to use `dotenv` or some secrets library to load in credentials.
 
