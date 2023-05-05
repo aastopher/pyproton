@@ -26,7 +26,7 @@ Debian based distros
 
 ### **Import and use pyproton VPN:**
 
-* `verbose=True` turns on the stdin output for each step.
+* `verbose=True` (optional: `default = False`) turns on the stdin output for each step.
 * `vpn.login()` log the user into proton VPN
 * `vpn.logout()` log the user out of proton VPN
 * `vpn.shuffle()` disconnects from the current VPN and connected to another
