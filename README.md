@@ -33,7 +33,7 @@ Debian based distros
 * `user` **required:** user name string
 * `pw` **required:** password string
 * `verbose` **optional:** (`default=False`) turns on/off the stdin output for each step.
-* `retries` **optional:** (`default=3`) turns on/off the stdin output for each step.
+* `retries` **optional:** (`default=3`) defines number of retries when VPN connection times out.
 * `timeout` **optional:** (`default=20`) seconds to wait before timing out a login attempt.
 
 #### Methods
