@@ -39,8 +39,8 @@ Debian based distros
 #### Methods
 
 * `vpn.login()` log the user into proton VPN - (context manager): `__enter__`
-* `vpn.logout()` log the user out of proton VPN - (context manager): `__enter__`
-* `vpn.connect()` connect to proton VPN endpoint - (context manager): `__exit__`
+* `vpn.logout()` log the user out of proton VPN - (context manager): `__exit__`
+* `vpn.connect()` connect to proton VPN endpoint - (context manager): `__enter__`
 * `vpn.disconnect()` disconnect from proton VPN endpoint - (context manager): `__exit__`
 * `vpn.shuffle()` disconnects from the current VPN and connected to another
 
