@@ -28,13 +28,21 @@ Debian based distros
 
 ### **Import and use pyproton VPN:**
 
-* `verbose=True` (optional: `default=False`) turns on/off the stdin output for each step.
-* `vpn.login()` log the user into proton VPN
-* `vpn.logout()` log the user out of proton VPN
+#### Args
+
+* `user` **required:** user name string
+* `pw` **required:** password string
+* `verbose` **optional:** (`default=False`) turns on/off the stdin output for each step.
+* `retries` **optional:** (`default=3`) turns on/off the stdin output for each step.
+* `timeout` **optional:** (`default=20`) seconds to wait before timing out a login attempt.
+
+#### Methods
+
+* `vpn.login()` log the user into proton VPN - (context manager): `__enter__`
+* `vpn.logout()` log the user out of proton VPN - (context manager): `__enter__`
+* `vpn.connect()` connect to proton VPN endpoint - (context manager): `__exit__`
+* `vpn.disconnect()` disconnect from proton VPN endpoint - (context manager): `__exit__`
 * `vpn.shuffle()` disconnects from the current VPN and connected to another
-* `vpn.connect()` connect to proton VPN endpoint
-* `vpn.disconnect()` disconnect from proton VPN endpoint
-* Using the context manager will automatically (login / connect) and (disconnect / logout) when entering and exiting the VPN context.
 
 **NOTE:** It is generally recommended to use `dotenv` or some secrets library to load in credentials.
 
@@ -45,7 +53,7 @@ from pyproton import VPN
 user = 'user'
 pw = 'pw'
 
-with VPN(user, pw, verbose=True) as vpn:
+with VPN(user, pw) as vpn:
     print('do some stuff')
     vpn.shuffle()
     print('do more stuff')
