@@ -36,6 +36,10 @@ class VPN():
                 index = child.expect(['Successful login', 'Incorrect login credentials', 'error occured'], timeout=20)
                 if index == 0:
                     child.expect(pexpect.EOF)
+                    if self.verbose:
+                        sys.stdout.write('successfully logged in\n')
+                    self.logged_in = True
+                    return
                 elif index == 1:
                     raise VPNException("invalid credentials", 401)
                 else:
@@ -48,13 +52,9 @@ class VPN():
                         sys.stderr.write('already logged in skipping step...\n')
                     self.logged_in = True
                     return
-
-            
+                
         except pexpect.ExceptionPexpect as e:
             raise VPNException(str(e), 500)
-        if self.verbose:
-            sys.stdout.write('successfully logged in\n')
-        self.logged_in = True
 
     def logout(self):
         '''logs the user out of proton vpn'''
@@ -76,6 +76,7 @@ class VPN():
                     if self.verbose:
                         sys.stdout.write('successfully logged out\n')
                     self.logged_in = False
+                    return
                 else:
                     raise VPNException("error logging out", 500)
             else:
@@ -111,6 +112,7 @@ class VPN():
                     sys.stdout.write(output)
                     sys.stdout.write('\nsuccessfully connected\n')
                 self.active = True
+                return
             else:
                 raise VPNException('error connecting to vpn', 500)
 
