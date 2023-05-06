@@ -35,6 +35,7 @@ Debian based distros
 * `verbose` **optional:** (`default=False`) turns on/off the stdin output for each step.
 * `retries` **optional:** (`default=3`) defines number of retries when VPN connection times out.
 * `timeout` **optional:** (`default=20`) seconds to wait before timing out a login attempt.
+* `location` **optional:** (`default='U'`) location of servers to connect to (free servers only): `{'J':'Japan','N':'Netherlands','U':'United States'}`.
 
 #### Methods
 
@@ -44,7 +45,9 @@ Debian based distros
 * `vpn.disconnect()` disconnect from proton VPN endpoint - (context manager): `__exit__`
 * `vpn.shuffle()` disconnects from the current VPN and connected to another
 
-**NOTE:** It is generally recommended to use `dotenv` or some secrets library to load in credentials.
+#### Basic Usage
+
+**NOTE:** It is generally recommended to use `dotenv` or another method for loading in secrets. Please do NOT hardcode account credentials in a production environment, this is a critical security risk!
 
 ```python
 import os

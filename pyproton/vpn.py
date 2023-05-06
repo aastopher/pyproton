@@ -19,7 +19,7 @@ class VPN():
     Proton VPN CLI v3.13.0 (protonvpn-nm-lib v3.14.0; proton-client v0.7.1)
     '''
 
-    def __init__(self, user, pw, verbose=False, retries=3, timeout=20):
+    def __init__(self, user, pw, verbose=False, retries=3, timeout=20, location='U'):
         self.user = user
         self.pw = pw
         self.logged_in = False
@@ -27,6 +27,10 @@ class VPN():
         self.verbose = verbose
         self.retries = retries
         self.timeout = timeout
+        if location in ['J','N','U']:
+            self.location = location
+        else:
+            raise VPNException(f'invalid location {location}', 400)
 
     def login(self):
         '''logs the user into proton vpn'''
@@ -98,7 +102,7 @@ class VPN():
                 time.sleep(0.1)
                 child = pexpect.spawn('protonvpn-cli c')
                 time.sleep(1)
-                child.sendline('U') # select United States
+                child.sendline(self.location) # select location
                 time.sleep(1)
                 # randomly select VPN connection
                 for _ in range(random.randint(0, 30)):

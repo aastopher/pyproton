@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="pyproton",
-    version="0.0.3",
+    version="0.0.4",
     author="Aaron Stopher",
     packages=setuptools.find_packages(include=["pyproton"]),
     description="Minimal wrapper implementation of the linux protonvpn-cli",
