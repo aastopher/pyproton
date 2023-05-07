@@ -1,6 +1,5 @@
 import sys
 import random
-import time
 import pexpect
 
 class VPNException(Exception):
@@ -14,12 +13,9 @@ class VPNException(Exception):
 class VPN():
     '''
     Wrapper for the linux protonvpn-cli
-    
-    Proton version compatibility:
-    Proton VPN CLI v3.13.0 (protonvpn-nm-lib v3.14.0; proton-client v0.7.1)
     '''
 
-    def __init__(self, user, pw, verbose=False, retries=3, timeout=20, location='U'):
+    def __init__(self, user, pw, verbose=False, retries=3, timeout=5, location='U'):
         self.user = user
         self.pw = pw
         self.logged_in = False
@@ -27,26 +23,28 @@ class VPN():
         self.verbose = verbose
         self.retries = retries
         self.timeout = timeout
-        if location in ['J','N','U']:
+        if location in ['J', 'N', 'U']:
             self.location = location
         else:
             raise VPNException(f'invalid location {location}', 400)
 
     def login(self):
         '''logs the user into proton vpn'''
+        command = f'protonvpn-cli login {self.user}'
         try:
-            child = pexpect.spawn(f'protonvpn-cli login {self.user}')
+            child = pexpect.spawn(command)
             index = child.expect(['Enter your Proton VPN password:', 'You are already logged in.'], timeout=5)
             if index == 0:
+                child.waitnoecho()
                 child.sendline(self.pw)
-                index = child.expect(['Successful login', 'Incorrect login credentials', 'error occured'], timeout=self.timeout)
-                if index == 0:
+                index = child.expect(['Successful login', ' \r\n', 'Incorrect login credentials', 'error occured'], timeout=self.timeout)
+                if index == 0 or index == 1:
                     child.expect(pexpect.EOF)
                     if self.verbose:
                         sys.stdout.write('successfully logged in\n')
                     self.logged_in = True
                     return
-                elif index == 1:
+                elif index == 2:
                     raise VPNException("invalid credentials", 401)
                 else:
                     raise VPNException("error logging in", 401)
@@ -58,7 +56,7 @@ class VPN():
                         sys.stderr.write('already logged in skipping step...\n')
                     self.logged_in = True
                     return
-                
+
         except pexpect.ExceptionPexpect as e:
             raise VPNException(str(e), 500)
 
@@ -87,31 +85,30 @@ class VPN():
                     raise VPNException("error logging out", 500)
             else:
                 raise VPNException("error logging out", 500)
-        
+
         except pexpect.ExceptionPexpect as e:
             raise VPNException(str(e), 500)
-
+        
     def connect(self):
         '''
         connects to a random US Proton VPN
-
-        NOTE: less than 1 second sleep intervals resulted in frequent incomplete connections
         '''
         for retry in range(self.retries):
             try:
-                time.sleep(0.1)
                 child = pexpect.spawn('protonvpn-cli c')
-                time.sleep(1)
-                child.sendline(self.location) # select location
-                time.sleep(1)
+                child.waitnoecho(timeout=self.timeout//3)
+                child.sendline(self.location)  # select location
+
+                child.waitnoecho(timeout=self.timeout//3)
                 # randomly select VPN connection
                 for _ in range(random.randint(0, 30)):
                     child.send('+')
-                child.sendline('+') # + 1 and enter VPN selection
-                time.sleep(1)
-                child.sendline('u') # select updb - better speed
-                time.sleep(1)
-                index = child.expect(['Successfully connected'], timeout=10)
+                child.sendline('+')  # + 1 and enter VPN selection
+
+                child.waitnoecho(timeout=self.timeout//3)
+                child.sendline('u')  # select updb - better speed
+
+                index = child.expect(['Successfully connected'], timeout=5)
                 if index == 0:
                     output = child.before.decode().strip().splitlines()[-1]
                     child.expect(pexpect.EOF)
@@ -121,22 +118,23 @@ class VPN():
                     self.active = True
                     return
                 else:
+                    self.logout()
                     raise VPNException('error connecting to vpn', 500)
 
             except pexpect.ExceptionPexpect as e:
-                if retry == self.retries-1:
-                    raise VPNException('maximum retries reached while connecting to VPN', 500)
+                if retry == self.retries - 1:
+                    sys.stderr.write(f'maximum retries reached while connecting to VPN; stopping connection attempt... ({retry + 1}/{self.retries})\n')
+                    return
                 else:
-                    time.sleep(3)
                     if self.verbose:
-                        sys.stderr.write(f'error while connecting to VPN; retrying connection... {retry}\n')
+                        sys.stderr.write(f'error while connecting to VPN; retrying connection... ({retry + 1}/{self.retries})\n')
                     continue
 
     def disconnect(self):
         '''disconnects from VPN connection'''
         try:
             child = pexpect.spawn('protonvpn-cli d')
-            index = child.expect(['Successfully disconnected','No Proton VPN connection was found'], timeout=5)
+            index = child.expect(['Successfully disconnected', 'No Proton VPN connection was found'], timeout=5)
             if index == 0:
                 child.expect(pexpect.EOF)
                 if self.verbose:

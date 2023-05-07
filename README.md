@@ -6,6 +6,10 @@ This package is a lightweight minimal wrapper implementation of the linux proton
 
 ## Getting Started
 
+**Version compatibility:**
+
+`Proton VPN CLI v3.13.0 (protonvpn-nm-lib v3.14.0; proton-client v0.7.1)`
+
 ### **Install the CLI:**
 
 [Proton VPN Docs](https://protonvpn.com/support/linux-vpn-tool/)
@@ -33,8 +37,8 @@ Debian based distros
 * `user` **required:** user name string
 * `pw` **required:** password string
 * `verbose` **optional:** (`default=False`) turns on/off the stdin output for each step.
-* `retries` **optional:** (`default=3`) defines number of retries when VPN connection times out.
-* `timeout` **optional:** (`default=20`) seconds to wait before timing out a login attempt.
+* `retries` **optional:** (`default=3`) defines number of retries when a VPN connection attempt times out.
+* `timeout` **optional:** (`default=5`) seconds to wait before timing out a login attempt.
 * `location` **optional:** (`default='U'`) location of servers to connect to (free servers only): `{'J':'Japan','N':'Netherlands','U':'United States'}`.
 
 #### Methods
@@ -64,6 +68,7 @@ with VPN(user, pw) as vpn:
 
 ### **TO-DO**
 
+* Improve reliability
 * PyTest & Tox testing
 * Sphynx docs
 * Coverage
