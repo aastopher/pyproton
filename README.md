@@ -49,6 +49,11 @@ Debian based distros
 * `vpn.disconnect()` disconnect from proton VPN endpoint - (context manager): `__exit__`
 * `vpn.shuffle()` disconnects from the current VPN and connected to another
 
+#### Properties
+
+* `vpn.logged_in` returns `(True, False)` based on the login status of the user
+* `vpn.active` returns `(True, False)` based on the connection status of the VPN
+
 #### Basic Usage
 
 **NOTE:** It is generally recommended to use `dotenv` or another method for loading in secrets. Please do NOT hardcode account credentials in a production environment, this is a critical security risk!
