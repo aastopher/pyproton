@@ -41,6 +41,11 @@ Debian based distros
 * `timeout` **optional:** (`default=5`) seconds to wait before timing out a login attempt.
 * `location` **optional:** (`default='U'`) location of servers to connect to (free servers only): `{'J':'Japan','N':'Netherlands','U':'United States'}`.
 
+#### Properties
+
+* `vpn.logged_in` returns `(True, False)` based on the login status of the user
+* `vpn.active` returns `(True, False)` based on the connection status of the VPN
+
 #### Methods
 
 * `vpn.login()` log the user into proton VPN - (context manager): `__enter__`
@@ -48,11 +53,6 @@ Debian based distros
 * `vpn.connect()` connect to proton VPN endpoint - (context manager): `__enter__`
 * `vpn.disconnect()` disconnect from proton VPN endpoint - (context manager): `__exit__`
 * `vpn.shuffle()` disconnects from the current VPN and connected to another
-
-#### Properties
-
-* `vpn.logged_in` returns `(True, False)` based on the login status of the user
-* `vpn.active` returns `(True, False)` based on the connection status of the VPN
 
 #### Basic Usage
 
